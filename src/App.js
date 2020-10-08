@@ -1,11 +1,12 @@
 import React from 'react';
-import './styles/style.css';
 
 import ListOfUsers from './components/ListOfUsers';
+import data from './api/users';
 
-import users from './api/users';
+import './styles/style.css';
 
 function App() {
+  const users = [...data];
   const initialUsers = users.splice(0, 50);
   return (
     // eslint-disable-next-line react/jsx-filename-extension

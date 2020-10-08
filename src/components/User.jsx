@@ -1,33 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
+
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 
-import Color from 'color';
 import thumbnail from '../images/thumbnail.jpg';
 
-const stringToTime = (time) => {
-  const string = time.toString();
-  return `${string[0]}${string[1]}:${string[2]}${string[3]}.${string[4]}${string[5]}${string[6]}`;
-};
+const msToTime = (time) => {
+  const milliseconds = parseInt((time / 1000) / 100, 10);
+  let seconds = Math.floor((time / 1000) % 60);
+  let minutes = Math.floor((time / (1000 * 60)) % 60);
 
-const cutName = (name) => {
-  if (name.length > 21) {
-    return (
-      <>
-        {name.substr(0, 20)}
-        &hellip;
-      </>
-    );
-  }
-  return name;
+  minutes = (minutes < 10) ? `0${minutes}` : minutes;
+  seconds = (seconds < 10) ? `0${seconds}` : seconds;
+
+  return `${minutes}:${seconds}.${milliseconds}`;
 };
 
 const User = ({ user, index }) => {
   const [clicked, setClicked] = useState(false);
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     setClicked(!clicked);
-  };
+  });
 
   return (
     <div className="user" onClick={handleClick}>
@@ -36,17 +30,17 @@ const User = ({ user, index }) => {
       </p>
       <div className="user__row">
         <img
-          className={cn('user__thumbnail', {'user__active' : clicked})}
+          className={cn('user__thumbnail', {'user__active': clicked})}
           alt="thumbnail"
           src={thumbnail}
         />
         <div>
           <p className="user__name">
-            {cutName(user.name)}
+            {user.name}
           </p>
           <div className="user__row--small">
             <p className="user__time">
-              {stringToTime(user.time)}
+              {msToTime(user.time)}
             </p>
             <p className="user__speed">
               {user.speed}
@@ -54,7 +48,7 @@ const User = ({ user, index }) => {
               км/ч
             </p>
           </div>
-          <p className="user__time--penalty">
+          <p className="user__time--penalty" style={{ color: clicked ? user.color.hex() : '#bbc0c7' }}>
             штрафное время
             {' '}
             00:00.00
@@ -67,7 +61,7 @@ const User = ({ user, index }) => {
 
 User.propTypes = {
   user: PropTypes.shape({
-    color: Color,
+    color: PropTypes.object,
     name: PropTypes.string,
     speed: PropTypes.number,
     time: PropTypes.number,

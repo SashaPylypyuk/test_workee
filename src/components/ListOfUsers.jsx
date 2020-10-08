@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 
-import Color from 'color';
+import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import shortid from 'shortid';
+
 import User from './User';
 
 const ListOfUsers = ({ data, initialUsers }) => {
@@ -25,7 +26,7 @@ const ListOfUsers = ({ data, initialUsers }) => {
       loader={<h4>Loading...</h4>}
     >
       {users.map((user, index) => (
-        <User user={user} index={index} />
+        <User key={shortid.generate()} user={user} index={index} />
       ))}
     </InfiniteScroll>
 
@@ -35,7 +36,7 @@ const ListOfUsers = ({ data, initialUsers }) => {
 ListOfUsers.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
-      color: Color,
+      color: PropTypes.object,
       name: PropTypes.string,
       speed: PropTypes.number,
       time: PropTypes.number,
@@ -43,7 +44,7 @@ ListOfUsers.propTypes = {
   ).isRequired,
   initialUsers: PropTypes.arrayOf(
     PropTypes.shape({
-      color: Color,
+      color: PropTypes.object,
       name: PropTypes.string,
       speed: PropTypes.number,
       time: PropTypes.number,
